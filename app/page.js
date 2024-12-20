@@ -1,8 +1,8 @@
 'use client'
 import React from "react";
-import SideNavbar from "../components/SideNavbar";
-import TopNavbar from "../components/TopNavbar";
-import Glance from "../components/Glance";
+import SideNavbar from "../app/components/SideNavbar";
+import TopNavbar from "../app/components/TopNavbar";
+import Glance from "../app/components/Glance";
 
 const Home = () => {
   return (
