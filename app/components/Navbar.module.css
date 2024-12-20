@@ -1,0 +1,15 @@
+.hover:hover path {
+  fill: #115e56;
+}
+.hover:hover {
+  background-color: white;
+}
+.navbar:hover path {
+  fill: #212636;
+}
+.navbar:hover {
+  background-color: #ccfbef;
+}
+.navbar:hover p {
+  color: #212636;
+}

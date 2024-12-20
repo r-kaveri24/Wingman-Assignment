@@ -1,0 +1,31 @@
+.shadow {
+  box-shadow: 0px 5px 22px 0px #0000000a;
+
+  box-shadow: 0px 0px 0px 1px #0000000f;
+}
+
+.linerGradiant {
+  background: linear-gradient(130deg, #15B79F 0%, #0E9382 100%);
+
+}
+
+.rotate {
+  width: 20px;
+  height: 75px;
+  transform: rotate(90deg);
+  transform-origin: left top;
+  white-space: nowrap;
+  color: #C4C4C4;
+}
+
+.scrollbarHide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbarHide {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
