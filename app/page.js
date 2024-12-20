@@ -1,8 +1,18 @@
-import Index from './index/page.jsx'
-export default function Home() {
+'use client'
+import React from "react";
+import SideNavbar from "../components/SideNavbar";
+import TopNavbar from "../components/TopNavbar";
+import Glance from "../components/Glance";
+
+const Home = () => {
   return (
     <div>
-      <Index />
+      <SideNavbar />
+      <div className="flex">
+        <TopNavbar />
+        <Glance />
+      </div>
     </div>
   );
-}
+};
+export default Home;
