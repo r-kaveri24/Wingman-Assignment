@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 
 const GlanceCard = ({ title, value, discription, icon }) => {
