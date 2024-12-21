@@ -1,113 +1,176 @@
-'use client';
+'use client'
+import React, { useState, useEffect, useRef } from "react";
 
-import { useState, useEffect } from 'react';
+const Chat = () => {
+  const [messages, setMessages] = useState([]);
+  const [inputMessage, setInputMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [date, setDate] = useState("");  
+  const [time, setTime] = useState(""); 
 
-const users = [
-  { id: 1, name: 'John Doe', profilePic: '/Avatar.png' },
-  { id: 2, name: 'Jane Smith', profilePic: '/Avatar.png' },
-  { id: 3, name: 'Bob Johnson', profilePic: '/Avatar.png' },
-  { id: 4, name: 'Alice Brown', profilePic: '/Avatar.png' },
-];
+  const chatEndRef = useRef(null);  
 
-const initialChatHistory = {
-  1: ['Hi John!', 'How can I help you?'],
-  2: ['Hi Jane!', 'I have a question about your products.'],
-  3: ['Hey Bob!', 'Can you help me with my order?'],
-  4: ['Hello Alice!', 'What are your store timings?'],
-};
+  const formatDate = () => {
+    const now = new Date();
+    const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+    return now.toLocaleString('en-US', options);
+  };
 
-export default function ChatApp() {
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [chatHistory, setChatHistory] = useState(initialChatHistory);
-  const [message, setMessage] = useState('');
+  const formatTime = () => {
+    const now = new Date();
+    const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    return now.toLocaleString('en-US', options);
+  };
 
-  useEffect(() => {
-    if (selectedUser) {
-      setChatHistory((prev) => ({
-        ...prev,
-        [selectedUser]: initialChatHistory[selectedUser],
-      }));
+
+  const scrollToBottom = () => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const generateRandomId = () => {
+    return `user-${Math.random().toString(36).substr(2, 9)}`;
+  };
+
+
+  const getUserId = () => {
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUserId) {
+      return storedUserId;
     }
-  }, [selectedUser]);
+    return null; 
+  };
 
-  const handleSendMessage = () => {
-    if (message.trim()) {
-      setChatHistory((prev) => ({
-        ...prev,
-        [selectedUser]: [...prev[selectedUser], message],
-      }));
-      setMessage('');
+
+  const setUserId = (userId) => {
+    localStorage.setItem('userId', userId);
+  };
+
+
+  const handleSendMessage = async () => {
+    if (!inputMessage) return;
+
+    const currentTime = formatTime();
+    let userId = getUserId(); 
+
+  
+    if (!userId) {
+      userId = generateRandomId();
+      setUserId(userId);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: "Hi, I'm Wingman AI Assistant. How can I help you?", sender: "bot", time: currentTime },
+      ]);
+    }
+
+    setLoading(true);
+    setMessages([...messages, { text: inputMessage, sender: "user", time: currentTime }]);
+
+    setInputMessage(""); 
+
+    try {
+      const response = await fetch("/api/gemini-chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: inputMessage,
+          userId: userId,
+        }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { text: data.reply, sender: "bot", time: formatTime() },
+        ]);
+      } else {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { text: "Error: " + data.error, sender: "bot", time: formatTime() },
+        ]);
+      }
+    } catch (error) {
+      console.error("Error communicating with API:", error);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: "Failed to generate response.", sender: "bot", time: formatTime() },
+      ]);
+    } finally {
+      setLoading(false);
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage(); 
+    }
+  };
+
+  useEffect(() => {
+    setDate(formatDate());
+  }, []);
+
+  useEffect(() => {
+    const userId = getUserId();
+    if (!userId) {
+
+      setMessages([{ text: "Hi, I'm Wingman AI Assistant. How can I help you?", sender: "bot", time: formatTime() }]);
+    }
+  }, []); // Only run once on component mount
+
+  useEffect(() => {
+
+    scrollToBottom();
+  }, [messages]);
+
   return (
-    <div className="flex flex-col md:flex-row h-screen">
-      <div className="md:w-1/2 p-6 bg-gray-100">
-        <h1 className="text-2xl font-bold mb-4">Chat Window</h1>
-        <ul className="space-y-4">
-          {users.map((user) => (
-            <li
-              key={user.id}
-              className="flex items-center p-4 bg-white rounded-lg shadow-sm cursor-pointer"
-              onClick={() => setSelectedUser(user.id)}
-            >
-              <img
-                src={user.profilePic}
-                alt={`${user.name}'s profile`}
-                className="w-12 h-12 rounded-full mr-4"
-              />
-              <div className="flex-grow">
-                <h2 className="text-lg font-medium">{user.name}</h2>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="md:w-1/2 flex flex-col h-full">
-        {selectedUser ? (
-          <>
-            <header className="bg-[#115E56] text-white p-4">
-              <h1 className="text-xl font-semibold">
-                Chat with {users.find((user) => user.id === selectedUser)?.name}
-              </h1>
-            </header>
-
-            <div className="flex-grow p-4 overflow-y-auto bg-gray-100">
-              {chatHistory[selectedUser]?.map((msg, index) => (
-                <p
-                  key={index}
-                  className={`mb-2 p-2 rounded ${
-                    index % 2 === 0 ? 'bg-[#15B79F] text-white' : 'bg-gray-300'
+    <div className="flex flex-col items-center h-screen min-h-[500px] w-full bg-gray-100 px-4 py-5 md:px-10">
+      <div className="bg-white w-full rounded-lg shadow-lg flex flex-col overflow-hidden" style={{ height: "600px" }}>
+        <div className="bg-[#115E56] text-white p-4 text-center font-semibold text-lg">Wingman Chatbot</div>
+        <div className="text-center text-gray-500 text-sm mt-2">{date}</div> 
+        <div className="text-center text-gray-500 text-sm mt-2">{time}</div>
+        <div className="flex-1 p-4 overflow-y-auto space-y-4">
+          {messages.map((message, index) => (
+            <div key={index} className={`flex flex-col ${message.sender === "user" ? "items-end" : "items-start"}`}>
+              <div
+                className={`max-w-xs px-4 py-2 rounded-lg text-sm ${message.sender === "user"
+                  ? "bg-[#0E9382] text-white"
+                  : "bg-gray-200 text-gray-900"
                   }`}
-                >
-                  {msg}
-                </p>
-              ))}
-            </div>
-
-            <footer className="p-4 border-t flex items-center bg-white">
-              <input
-                type="text"
-                placeholder="Type a message..."
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                className="flex-grow border rounded p-2 mr-2"
-              />
-              <button
-                onClick={handleSendMessage}
-                className="bg-[#15B79F] text-white px-4 py-2 rounded"
               >
-                Send
-              </button>
-            </footer>
-          </>
-        ) : (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-gray-500">Select a user to start chatting</p>
-          </div>
-        )}
+                {message.text}
+              </div>
+              <div className="text-xs text-gray-500 mt-1">{message.time}</div>
+            </div>
+          ))}
+          {loading && (
+            <div className="text-start text-gray-500 text-sm mt-2">Loading...</div>
+          )}
+
+          <div ref={chatEndRef} />
+        </div>
+        <div className="border-t p-4 flex items-center">
+          <input
+            type="text"
+            className="w-[80%] flex-1 border-2 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-2 focus:border-[#15B79F]"
+            placeholder="Type your message..."
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            onKeyDown={handleKeyDown} 
+          />
+          <button
+            className="text-[10px] ml-2 bg-[#15B79F] text-white px-4 py-2 rounded-lg md:text-sm hover:bg-[#0E9382]"
+            onClick={handleSendMessage}
+          >
+            Send
+          </button>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default Chat;

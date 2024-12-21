@@ -1,83 +1,56 @@
 'use client';
 
 import React from "react";
-import { ResponsiveBar } from "@nivo/bar";
+import {  XAxis, YAxis, CartesianGrid, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import {comparisonData  } from '../../utils/database.js';
+
 
 const BarChartComponent = () => {
-  const chartData = [
-    { name: "This Week", consultations: 20, ordersClosed: 18 },
-    { name: "Last Week", consultations: 15, ordersClosed: 14 },
-  ];
 
-  // We need to adjust the ticks to show the custom series of 10, 10, 10, 10, 10, 20
-  const yAxisTicks = [10, 10, 10, 10, 10, 20];
 
-  const CustomGridLayer = ({ yScale, width }) => {
-    const ticks = yScale.ticks().filter(tick => tick % 10 === 0); // Only include ticks at 10-point intervals
 
     return (
-      <g>
-        {ticks.map((tick, index) => (
-          <line
-            key={index}
-            x1={0}
-            x2={width}
-            y1={yScale(tick)}
-            y2={yScale(tick)}
-            stroke="#C4C4C4"
-            strokeDasharray="4 4" // Dotted line style
-          />
-        ))}
-      </g>
-    );
-  };
+      <div className="w-full h-[455px] col-span-1 lg:col-span-3 py-8">
+      <div className="flex items-center gap-2 mb-6 px-6">
+          <img src='/ChartBar.png' alt="Bar Chart" />
+          <p className="text-xs text-gray-500 uppercase tracking-wider">VS PAST PERIOD</p>
+      </div>
+      <div className="h-[300px]">
+          <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={comparisonData} margin={{ top: 5, right: 30, left: 0, bottom: 25 }}>
+                  <CartesianGrid
+                      strokeDasharray="5 5"
+                      vertical={false}
+                      horizontal={true}
+                      stroke="#C4C4C4"
+                     
+                  />
+                  <XAxis
+                      dataKey="period"
+                      axisLine={false}
+                      tickLine={false}
+                      interval={0}
+                      tick={{ fontSize: 12 }}
+                      dy={10}
+                  />
+                  <YAxis axisLine={{ stroke: '#000000' }} tickLine={false} tick={{ fontSize: 12 }}  />
+                  <Bar dataKey="consultations" fill="#CCFBEF" barSize={32} radius={[5, 5, 0, 0]} />
+                  <Bar dataKey="orders" fill="#115E59" barSize={32} radius={[5, 5, 0, 0]} />
+              </BarChart>
+          </ResponsiveContainer>
+      </div>
 
-  return (
-    <div style={{ height: 400, width:200 }}>
-      <ResponsiveBar
-        data={chartData}
-        keys={['consultations', 'ordersClosed']}
-        indexBy="name"
-        margin={{ top: 50, right: 30, bottom: 50, left: 40 }}
-        
-        
-        innerPadding={3}
-        groupMode="grouped"
-        colors={['#CCFBEF', '#134E48']}
-        borderRadius={{top:4 }}
-        axisBottom={{
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          
-        }}
-        axisLeft={{
-          tickValues: yAxisTicks,
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: '',
-          legendPosition: 'middle',
-          legendOffset: -40
-        }}
-        layers={[
-          CustomGridLayer, // Adding the custom grid layer for Y-axis first
-          "axes",
-          "bars",
-          "markers",
-          "legends",
-        ]}
-        enableGridX={true}
-        enableGridY={false} 
-        label={false}
-        tooltip={({ id, value, color }) => (
-          <div style={{ color }}>
-            <strong>{id}</strong>: {value}
+      <div className="flex flex-wrap items-center justify-center md:justify-start gap-1 md:gap-6 mt-1 md:mt-2 border-t-[1px] mx-6 pt-3 md:pt-6">
+          <div className="flex items-center gap-[6px]">
+              <div className="w-4 h-1 rounded-sm bg-[#CCFBEF]"></div>
+              <span className="text-[10px] text-gray-600">Consultations</span>
           </div>
-        )}
-      />
-    </div>
-  );
+          <div className="flex items-center gap-[6px]">
+              <div className="w-4 h-1 rounded-sm bg-[#115E59] "></div>
+              <span className="text-[10px] text-gray-600">Orders closed</span>
+          </div>
+      </div>
+  </div>);
 };
 
 export default BarChartComponent;

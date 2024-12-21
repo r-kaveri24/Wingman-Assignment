@@ -1,130 +1,101 @@
 'use client';
 
 import React from "react";
-import { ResponsiveBar } from "@nivo/bar";
-import { line } from "d3-shape"; 
+import { ComposedChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Bar } from 'recharts';
+import { weeklyData } from '../../utils/database.js';
 
 const MixedChart = () => {
  
-  const data = [
-    { id: 1, day: "Mon", value: 10, lineValue: 35, secondLineValue: 25 },
-    { id: 2, day: "Tue", value: 20, lineValue: 41, secondLineValue: 30 },
-    { id: 3, day: "Wed", value: 30, lineValue: 38, secondLineValue: 35 },
-    { id: 4, day: "Thu", value: 40, lineValue: 58, secondLineValue: 45 },
-    { id: 5, day: "Fri", value: 50, lineValue: 45, secondLineValue: 50 },
-    { id: 6, day: "Sat", value: 60, lineValue: 46, secondLineValue: 55 },
-  ];
-
  
-  const valuesToShow = [0, 10, 10, 10, 10, 10, 20];
-
-  const LineLayer = ({ xScale, yScale }) => {
-    const lineGenerator = line()
-      .x((d) => xScale(d.day) + xScale.bandwidth() / 2) 
-      .y((d) => yScale(d.lineValue)); 
-
-    const secondLineGenerator = line()
-      .x((d) => xScale(d.day) + xScale.bandwidth() / 2)
-      .y((d) => yScale(d.secondLineValue)); 
-
-    return (
-      <>
-        <path
-          d={lineGenerator(data)}
-          fill="none"
-          stroke="#15B79F"
-          strokeWidth={2}
-        />
-        <path
-          d={secondLineGenerator(data)}
-          fill="none"
-          stroke="#8A94A6"
-          strokeWidth={2}
-          strokeDasharray="4 4"
-        />
-      </>
-    );
-  };
-
-  const CustomGridLayer = ({ yScale}) => {
-     const ticks = yScale.ticks().filter(tick => tick % 10 === 0); // Only include ticks at 10-point intervals
-
-    return (
-      <g>
-        {ticks.map((tick, index) => (
-          <line
-            key={index}
-            x1={0}
-            x2='495'
-            y1={yScale(tick)}
-            y2={yScale(tick)}
-            stroke="#C4C4C4"
-            strokeDasharray="4 4" 
-          />
-        ))}
-      </g>
-    );
-  };
-
-  return (
-    <div style={{ height: 284, width: 600, minWidth:300 }} >
-      <ResponsiveBar
-        data={data}
-        keys={["value"]}
-        indexBy="day"
-        margin={{ top: 50, right: 50, bottom: 50, left: 60 }}
-        padding={0.3}
-        colors={{ scheme: "yellow_orange_red" }}
-        borderRadius={2}
-        axisBottom={{
-          tickValues: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], 
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legendPosition: "middle",
-          legendOffset: 32,
-        }}
-        axisLeft={{
-          tickValues: [0, 10, 20, 30, 40, 50, 60], 
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: "Consultations",
-          legendPosition: "middle",
-          legendOffset: -40,
-        }}
-        axisRight={{
-          format: (v) => (valuesToShow.includes(v) ? v : ""), 
-          tickValues: valuesToShow, 
-          tickSize: 5,
-          tickPadding: 5,
-          tickRotation: 0,
-          legend: "EXPERTS ONLINE",
-          legendPosition: "middle",
-          legendOffset: 40,
-        }}
-        layers={[
-          "axes",
-          "legends",
-          CustomGridLayer,
-          "bars",
-          "markers",
-          LineLayer, 
-        ]}
-        label={false}
-        theme={{
-          axis: {
-            legend: {
-              text: {
-                fontSize: 8, 
-                fill: '#C4C4C4', 
-              },
-            },
-          },
-        }}
-      />
-    </div>
-  );
+return(
+  <div className="w-full h-[100%] col-span-1 lg:col-span-7py-6  px-2 py-8">
+                    <div className="flex items-center gap-2 mb-6 px-6">
+                        <img src='./Vector (10).png' alt="chat" />
+                        <p className="text-xs text-gray-500 uppercase tracking-wider">CONSULTATIONS</p>
+                    </div>
+                    <div className="h-[300px]">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <ComposedChart
+                                data={weeklyData}
+                                margin={{ top: 5, right: 10, left: 10, bottom: 5 }}
+                            >
+                                <CartesianGrid
+                                    strokeDasharray="5 5"
+                                    vertical={false}
+                                    horizontal={true}
+                                    stroke="#C4C4C4"
+                                />
+                                <XAxis
+                                    dataKey="day"
+                                    axisLine={false}
+                                    tickLine={false}
+                                    dy={10}
+                                    tick={{ fill: '#94A3B8', fontSize: 12 }}
+                                />
+                                <YAxis
+                                    axisLine={false}
+                                    tickLine={false}
+                                    dx={-10}
+                                    tick={{ fill: '#94A3B8', fontSize: 12 }}
+                                    ticks={[0, 10, 20, 30, 40, 50, 60]}
+                                    domain={[0, 60]}
+                                    yAxisId="left"
+                                    label={{ value: 'CONSULTATIONS', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#94A3B8', fontSize: 8, opacity: 0.7 } }}
+                                />
+                                <YAxis
+                                    yAxisId="right"
+                                    orientation="right"
+                                    axisLine={false}
+                                    tickLine={false}
+                                    dx={10}
+                                    tick={{ fill: '#94A3B8', fontSize: 12 }}
+                                    domain={[0, 20]}
+                                    tickFormatter={() => '10'}
+                                    label={{ value: 'EXPERTS ONLINE', angle: -90, position: 'insideRight', style: { textAnchor: 'middle', fill: '#94A3B8', fontSize: 8, opacity: 0.7 } }}
+                                />
+                                <Bar
+                                    dataKey="experts"
+                                    fill="#FEF9C3"
+                                    yAxisId="right"
+                                    barSize={30}
+                                    radius={[4, 4, 0, 0]}
+                                />
+                                <Line
+                                    type="monotone"
+                                    dataKey="incoming"
+                                    stroke="#8A94A6"
+                                    strokeWidth={2}
+                                    dot={false}
+                                    strokeDasharray="5 5"
+                                    yAxisId="left"
+                                />
+                                <Line
+                                    type="monotone"
+                                    dataKey="answered"
+                                    stroke="#15B79E"
+                                    strokeWidth={2}
+                                    dot={false}
+                                    yAxisId="left"
+                                />
+                            </ComposedChart>
+                        </ResponsiveContainer>
+                    </div>
+                    <div className="flex flex-wrap items-center justify-center md:justify-start gap-1 md:gap-6 mt-2 md:mt-4 border-t-[1px] mx-6 pt-3 md:pt-6">
+                        <div className="flex items-center gap-2">
+                            <div className="w-3 md:w-4 h-1 rounded-sm bg-[#94A3B8]"></div>
+                            <span className="text-[10px] text-[#667085]">Incoming</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className="w-4 h-1 rounded-sm bg-[#15B79E]"></div>
+                            <span className="text-[10px] text-[#667085]">Answered</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className="w-4 h-1 rounded-sm bg-[#FFE587] "></div>
+                            <span className="text-[10px] text-[#667085]">Experts online</span>
+                        </div>
+                    </div>
+                </div>
+);
 };
 
 export default MixedChart;
