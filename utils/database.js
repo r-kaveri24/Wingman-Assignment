@@ -1,3 +1,4 @@
+import React from "react";
 export const weeklyData = [
     { day: 'Mon', incoming: 33, answered: 28, experts: 7 },
     { day: 'Tue', incoming: 32, answered: 27, experts: 7 },
