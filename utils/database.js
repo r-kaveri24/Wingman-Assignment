@@ -1,3 +1,4 @@
+
 import React from "react";
 export const weeklyData = [
     { day: 'Mon', incoming: 33, answered: 28, experts: 7 },
@@ -27,37 +28,37 @@ export const cardsData = [
     {
         title: "Consultations",
         value: "25",
-        icon: <img src="../vector (10).png" alt="Consultations" style={{ width: '12px', height: '12px' }} />,
+        icon: <img src="Vector(10).png" alt="Consultations" style={{ width: '12px', height: '12px' }} />,
         discription: <p className="flex gap-2 text-sm items-center"><img src="TrendUp.png" alt="" className="w-6 h-6" /><span className="text-[#15B79F]">15%</span> increase</p>
     },
     {
         title: "ORDERS PLACED",
         value: "500",
         discription: <p className="flex gap-2 text-sm items-center"><img src="TrendDown.png" alt="" className="w-6 h-6" /><span className="text-[#F04438]">15%</span> increase</p>,
-        icon: <img src="tag.png" alt="Orders Placed" style={{ width: '12px', height: '12px' }} />,
+        icon: <img src="Tag.png" alt="Orders Placed" style={{ width: '12px', height: '12px' }} />,
     },
     {
         title: "CONVERSION",
         value: "2.5%",
         discription: <p className="flex gap-2 text-sm items-center"><img src="TrendDown.png" alt="" className="w-6 h-6" /><span className="text-[#F04438]">15%</span> increase</p>,
-        icon: <img src="checkFat.png" alt="Conversion" style={{ width: '12px', height: '12px' }} />,
+        icon: <img src="CheckFat.png" alt="Conversion" style={{ width: '12px', height: '12px' }} />,
     },
     {
         title: "TOTAL SALES VALUE",
         value: "$10,000",
         discription: <p className="flex gap-2 text-sm items-center"><img src="TrendUp.png" alt="" className="w-6 h-6" /><span className="text-[#15B79F]">15%</span> increase</p>,
-        icon: <img src="coins.png" alt="Total Sales Value" style={{ width: '12px', height: '12px' }} />,
+        icon: <img src="Coins.png" alt="Total Sales Value" style={{ width: '12px', height: '12px' }} />,
     },
     {
         title: "AVG ORDER VALUE",
         value: "$200",
         discription: <p className="flex gap-2 text-sm items-center"><img src="TrendUp.png" alt="" className="w-6 h-6" /><span className="text-[#15B79F]">15%</span> increase</p>,
-        icon: <img src="coin.png" alt="Avg Order Value" style={{ width: '12px', height: '12px' }} />,
+        icon: <img src="Coin.png" alt="Avg Order Value" style={{ width: '12px', height: '12px' }} />,
     },
     {
         title: "COMMISSION PAID",
         value: "$100,000",
         discription: <p className="flex gap-2 text-sm items-center"><img src="TrendUp.png" alt="" className="w-6 h-6" /><span className="text-[#15B79F]">15%</span> increase</p>,
-        icon: <img src="piggyBank.png" alt="Commission Paid" style={{ width: '12px', height: '12px' }} />,
+        icon: <img src="PiggyBank.png" alt="Commission Paid" style={{ width: '12px', height: '12px' }} />,
     },
 ];

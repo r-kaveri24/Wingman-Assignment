@@ -10,7 +10,7 @@ const MixedChart = () => {
 return(
   <div className="w-full h-[100%] col-span-1 lg:col-span-7py-6  px-2 py-8">
                     <div className="flex items-center gap-2 mb-6 px-6">
-                        <img src='./Vector (10).png' alt="chat" />
+                        <img src='./Vector(10).png' alt="chat" />
                         <p className="text-xs text-gray-500 uppercase tracking-wider">CONSULTATIONS</p>
                     </div>
                     <div className="h-[300px]">
