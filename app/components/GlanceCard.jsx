@@ -15,7 +15,7 @@ const GlanceCard = ({ title, value, discription, icon }) => {
           <h3 className="text-xs font-bold text-[#667085]">{title}</h3>
         </div>
         
-        <div className="text-[32px] font-bold ">{value}</div>
+        <div className="text-[32px] font-medium ">{value}</div>
         <div className="text-2xl font-bold text-[#667085] ">{discription}</div>
       </div>
       
