@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React from "react";
 import SideNavbar from "../app/components/SideNavbar";
 import TopNavbar from "../app/components/TopNavbar";

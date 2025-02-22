@@ -4,6 +4,15 @@
 .hover:hover {
   background-color: white;
 }
+.navbar .active {
+  background-color: #ccfbef;
+}
+.navbar .active p {
+  color: #212636;
+}
+.navbar .active path {
+  fill: #212636;
+}
 .navbar:hover path {
   fill: #212636;
 }
